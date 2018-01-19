@@ -50,3 +50,6 @@ foreign import ccall safe "sdd_node_is_false"
 foreign import ccall safe "sdd_save_as_dot"
     c_save_as_dot :: Ptr CChar -> Ptr CSddNode -> IO ()
 
+foreign import ccall safe "sdd_rename_variables"
+    c_rename_variables :: Ptr CSddNode -> Ptr SDDLiteral -> Ptr CSddManager -> IO (Ptr CSddNode)
+

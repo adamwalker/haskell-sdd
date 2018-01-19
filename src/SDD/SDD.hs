@@ -3,6 +3,7 @@ module SDD.SDD where
 import Foreign.C.Types
 import Foreign.Ptr
 import Foreign.C.String
+import Foreign.Marshal.Array
 
 import SDD.C
 
@@ -39,6 +40,12 @@ exists lit (SDDNode x) (SDDManager m) = SDDNode <$> c_exists lit x m
 forall :: SDDLiteral -> SDDNode -> SDDManager -> IO SDDNode
 forall lit (SDDNode x) (SDDManager m) = SDDNode <$> c_forall lit x m
 
+existsMultiple :: [Bool] -> SDDNode -> SDDManager -> IO SDDNode
+existsMultiple vars (SDDNode x) (SDDManager m) = SDDNode <$> withArray (map boolToInt vars) (\arr -> c_exists_multiple arr x m)
+    where
+    boolToInt True  = 1
+    boolToInt False = 0
+
 nodeIsTrue :: SDDNode -> IO Int
 nodeIsTrue (SDDNode x) = fromIntegral <$> c_node_is_true x
 
@@ -47,4 +54,7 @@ nodeIsFalse (SDDNode x) = fromIntegral <$> c_node_is_false x
 
 saveAsDot :: String -> SDDNode -> IO ()
 saveAsDot fName (SDDNode x) = withCAString fName $ \fName' -> c_save_as_dot fName' x
+
+renameVariables :: SDDNode -> [SDDLiteral] -> SDDManager -> IO SDDNode
+renameVariables (SDDNode x) varMap (SDDManager m) = SDDNode <$> withArray varMap (\varMap -> c_rename_variables x varMap m)
 
