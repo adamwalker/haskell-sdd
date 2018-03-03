@@ -5,6 +5,8 @@ import Foreign.Ptr
 import Foreign.C.String
 import Foreign.Marshal.Array
 
+import Control.Monad
+
 import SDD.C
 
 newtype SDDManager = SDDManager {unSDDManager :: Ptr CSddManager}
@@ -57,4 +59,10 @@ saveAsDot fName (SDDNode x) = withCAString fName $ \fName' -> c_save_as_dot fNam
 
 renameVariables :: SDDNode -> [SDDLiteral] -> SDDManager -> IO SDDNode
 renameVariables (SDDNode x) varMap (SDDManager m) = SDDNode <$> withArray varMap (\varMap -> c_rename_variables x varMap m)
+
+ref :: SDDNode -> SDDManager -> IO ()
+ref (SDDNode x) (SDDManager m) = void $ c_sdd_ref x m
+
+deref :: SDDNode -> SDDManager -> IO ()
+deref (SDDNode x) (SDDManager m) = void $ c_sdd_deref x m
 
