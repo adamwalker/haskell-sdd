@@ -59,3 +59,9 @@ foreign import ccall safe "sdd_ref"
 foreign import ccall safe "sdd_deref"
     c_sdd_deref :: Ptr CSddNode -> Ptr CSddManager -> IO (Ptr CSddNode)
 
+foreign import ccall safe "sdd_manager_garbage_collect"
+    c_sdd_manager_garbage_collect :: Ptr CSddManager -> IO ()
+
+foreign import ccall safe "sdd_manager_minimize"
+    c_sdd_manager_minimize :: Ptr CSddManager -> IO ()
+

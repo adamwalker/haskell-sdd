@@ -66,3 +66,9 @@ ref (SDDNode x) (SDDManager m) = void $ c_sdd_ref x m
 deref :: SDDNode -> SDDManager -> IO ()
 deref (SDDNode x) (SDDManager m) = void $ c_sdd_deref x m
 
+garbageCollect :: SDDManager -> IO ()
+garbageCollect (SDDManager m) = c_sdd_manager_garbage_collect m
+
+minimize :: SDDManager -> IO ()
+minimize (SDDManager m) = c_sdd_manager_minimize m
+
